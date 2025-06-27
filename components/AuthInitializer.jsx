@@ -7,6 +7,7 @@ import { setAuthToken } from "@/store/authSlice";
 const AuthInitializer = () => {
   const dispatch = useDispatch();
   const { getToken } = useAuth();
+  const { isSignedIn } = useAuth();
 
   useEffect(() => {
     const loadToken = async () => {
@@ -17,6 +18,7 @@ const AuthInitializer = () => {
     };
     loadToken();
   }, []);
+
 
   return null; // or <></>
 };

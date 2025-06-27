@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import useFetch from "@/hooks/use-fetch";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -25,11 +24,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { createAccount } from "@/actions/dashboard";
-import { accountSchema } from "@/app/lib/schema";
+import { useCreateAccountMutation } from "@/store/api/accountApi";
+import { accountSchema } from "@/lib/schema";
+import { useUser } from "@clerk/nextjs";
+
+
 
 export function CreateAccountDrawer({ children }) {
+  const { isSignedIn, user, isLoaded } = useUser();
   const [open, setOpen] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -47,28 +51,35 @@ export function CreateAccountDrawer({ children }) {
     },
   });
 
-  const {
-    loading: createAccountLoading,
-    fn: createAccountFn,
-    error,
-    data: newAccount,
-  } = useFetch(createAccount);
+  const [createAccount, { isLoading, isSuccess, error, data }] =
+    useCreateAccountMutation();
 
-  const onSubmit = async (data) => {
-    await createAccountFn(data);
+  const onSubmit = async (formData) => {
+    // Convert balance from string to number
+    const payload = {
+      ...formData,
+      balance: parseFloat(formData.balance),
+      clerkUserId: user?.id
+    };
+
+    try {
+      await createAccount(payload).unwrap(); // RTK Query call
+    } catch (err) {
+      console.error("Failed to create account", err);
+    }
   };
 
   useEffect(() => {
-    if (newAccount) {
+    if (isSuccess) {
       toast.success("Account created successfully");
       reset();
       setOpen(false);
     }
-  }, [newAccount, reset]);
+  }, [isSuccess, reset]);
 
   useEffect(() => {
     if (error) {
-      toast.error(error.message || "Failed to create account");
+      toast.error(error?.data?.detail || "Failed to create account");
     }
   }, [error]);
 
@@ -81,28 +92,18 @@ export function CreateAccountDrawer({ children }) {
         </DrawerHeader>
         <div className="px-4 pb-4">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {/* Account Name */}
             <div className="space-y-2">
-              <label
-                htmlFor="name"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
+              <label htmlFor="name" className="text-sm font-medium">
                 Account Name
               </label>
-              <Input
-                id="name"
-                placeholder="e.g., Main Checking"
-                {...register("name")}
-              />
-              {errors.name && (
-                <p className="text-sm text-red-500">{errors.name.message}</p>
-              )}
+              <Input id="name" placeholder="e.g., Main Checking" {...register("name")} />
+              {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
             </div>
 
+            {/* Account Type */}
             <div className="space-y-2">
-              <label
-                htmlFor="type"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
+              <label htmlFor="type" className="text-sm font-medium">
                 Account Type
               </label>
               <Select
@@ -117,16 +118,12 @@ export function CreateAccountDrawer({ children }) {
                   <SelectItem value="SAVINGS">Savings</SelectItem>
                 </SelectContent>
               </Select>
-              {errors.type && (
-                <p className="text-sm text-red-500">{errors.type.message}</p>
-              )}
+              {errors.type && <p className="text-sm text-red-500">{errors.type.message}</p>}
             </div>
 
+            {/* Balance */}
             <div className="space-y-2">
-              <label
-                htmlFor="balance"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
+              <label htmlFor="balance" className="text-sm font-medium">
                 Initial Balance
               </label>
               <Input
@@ -141,12 +138,10 @@ export function CreateAccountDrawer({ children }) {
               )}
             </div>
 
-            <div className="flex items-center justify-between rounded-lg border p-3">
-              <div className="space-y-0.5">
-                <label
-                  htmlFor="isDefault"
-                  className="text-base font-medium cursor-pointer"
-                >
+            {/* Is Default Switch */}
+            <div className="flex items-center justify-between border p-3 rounded-lg">
+              <div>
+                <label htmlFor="isDefault" className="text-base font-medium">
                   Set as Default
                 </label>
                 <p className="text-sm text-muted-foreground">
@@ -160,18 +155,15 @@ export function CreateAccountDrawer({ children }) {
               />
             </div>
 
+            {/* Buttons */}
             <div className="flex gap-4 pt-4">
               <DrawerClose asChild>
                 <Button type="button" variant="outline" className="flex-1">
                   Cancel
                 </Button>
               </DrawerClose>
-              <Button
-                type="submit"
-                className="flex-1"
-                disabled={createAccountLoading}
-              >
-                {createAccountLoading ? (
+              <Button type="submit" className="flex-1" disabled={isLoading}>
+                {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Creating...

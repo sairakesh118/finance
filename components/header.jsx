@@ -1,15 +1,29 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "./ui/button";
 import { PenBox, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
+import { usePostMutation } from "@/store/api/appApi";
 
 const Header =  () => {
   const { isSignedIn, user, isLoaded } = useUser();
-  console.log("User:", user);
+  const [postUser, { data, error }] = usePostMutation();
+
+  useEffect(() => {
+    if (user) {
+      const userData = {
+        clerkUserId: user.id,
+        email: user.emailAddresses[0]?.emailAddress,
+        name: user.fullName || user.firstName || "Unknown",
+        imageUrl: user.imageUrl,
+      };
+
+      postUser(userData);
+    }
+  }, [user]);
 
   return (
     <header className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b">

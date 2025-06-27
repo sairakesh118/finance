@@ -16,8 +16,8 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${inter.className} bg-gray-100 text-gray-900 antialiased`}>
         <ClientProviders>
-          <Header className="bg-white shadow" />
-          <main>{children}</main>
+          <Header className="bg-white shadow " />
+          <main className=" pt-20 w-full">{children}</main>
         </ClientProviders>
       </body>
     </html>

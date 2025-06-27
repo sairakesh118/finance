@@ -12,11 +12,17 @@ export const appApi = createApi({
       return headers;
     },
   }),
+
+
   endpoints: (builder) => ({
-    getProfile: builder.query({
-      query: () => "/profile",
-    }),
+    post: builder.mutation({
+      query: (credentials) => ({
+        url: "/users/user",
+        method: "POST",
+        body: credentials,
+      }),
   }),
+})
 });
 
-export const { useGetProfileQuery } = appApi;
+export const { usePostMutation } = appApi;

@@ -1,15 +1,15 @@
-import React, { Suspense } from 'react'
 
-export const layout = ({children}) => {
+import { BarLoader } from "react-spinners";
+import { Suspense } from "react";
+
+export default function Layout({children}) {
   return (
-    <div>
-        <div className="flex flex-col h-screen">
-            <main className="flex-1 p-4 bg-gray-100">
-                <Suspense fallback={<div>Loading...</div>}>
-                    {children}
-                </Suspense>
-            </main>
-        </div>
+    <div className="px-5">
+      <Suspense
+        fallback={<BarLoader className="mt-4" width={"100%"} color="#9333ea" />}
+      >
+        {children}
+      </Suspense>
     </div>
-  )
+  );
 }
