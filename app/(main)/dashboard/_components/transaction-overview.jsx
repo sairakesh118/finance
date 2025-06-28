@@ -104,7 +104,7 @@ export function DashboardOverview({ accounts = [] }) {
 
   const handleEdit = (id) => {
   // Redirect to the edit page
-  router.push(`/transaction/create?edit=${id}&accountName=`);
+  router.push(`/transaction/edit?id=${id}&accountName=${selectedAccount}`);
 };
 
 const  handleDelete = async(transactionId) => {

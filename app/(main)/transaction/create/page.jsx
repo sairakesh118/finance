@@ -86,20 +86,10 @@ export default function AddTransactionPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="container">
+      <div className="min-w-full">
         {/* Page Header */}
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold gradient-title mb-2">
-            {editId ? "Edit Transaction" : "Add New Transaction"}
-          </h1>
-          <p className="text-gray-600">
-            {editId 
-              ? "Update your transaction details" 
-              : "Track your income and expenses"
-            }
-          </p>
-        </div>
+        
 
         {/* Transaction Form */}
         <AddTransactionForm
@@ -107,52 +97,6 @@ export default function AddTransactionPage() {
           initialData={initialData}
         />
       </div>
-    </div>
-  );
-}
-
-// Alternative layout if you want to use the same styling as your original
-export function AddTransactionPageAlternative() {
-  const searchParams = useSearchParams();
-  const { user, isLoaded } = useUser();
-  const editId = searchParams.get("edit");
-  const [initialData, setInitialData] = useState(null);
-
-  // If in edit mode, fetch the transaction data
-  const {
-    data: transactionData,
-    isLoading: transactionLoading,
-  } = useGetTransactionsQuery(editId, {
-    skip: !editId,
-  });
-
-  // Update initial data when transaction data is loaded
-  useEffect(() => {
-    if (editId && transactionData) {
-      setInitialData(transactionData);
-    }
-  }, [editId, transactionData]);
-
-  // Don't proceed until Clerk finishes loading the user
-  if (!isLoaded || !user) {
-    return <div>Loading user...</div>;
-  }
-
-  if (editId && transactionLoading) {
-    return <div>Loading transaction...</div>;
-  }
-
-  return (
-    <div className="max-w-3xl mx-auto px-5">
-      <div className="flex justify-center md:justify-normal mb-8">
-        <h1 className="text-5xl gradient-title">
-          {editId ? "Edit Transaction" : "Add Transaction"}
-        </h1>
-      </div>
-      <AddTransactionForm
-        editMode={!!editId}
-        initialData={initialData}
-      />
     </div>
   );
 }

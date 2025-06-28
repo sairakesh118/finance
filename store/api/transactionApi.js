@@ -30,9 +30,9 @@ export const transactionApi = createApi({
 
     updateTransaction: builder.mutation({
       query: ({transactionId, transactionData, accountId }) => ({
-        url: `/transactions/transaction/${transactionId}`,
+        url: `/transactions/edittransaction/${accountId}/${transactionId}`,
         method: "PUT",
-        body: {transactionData,accountId}
+        body: transactionData
       }),
     }),
 

@@ -82,7 +82,7 @@ const categoryColorMap = {
   Other: "#6B7280",
 };
 
-export function TransactionTable({ transactions, accountId ,refetch}) {
+export function TransactionTable({ transactions, accountId ,refetch,accountName}) {
   const [selectedIds, setSelectedIds] = useState([]);
   const [sortConfig, setSortConfig] = useState({
     field: "date",
@@ -193,8 +193,10 @@ export function TransactionTable({ transactions, accountId ,refetch}) {
     if (!window.confirm("Are you sure you want to delete this transaction?")) return;
 
     try {
-      await deleteTransactions({ accountId, transactionIds: [transactionId] }).unwrap();
+      console.log(accountId, transactionId);
+      await deleteTransactions({ accountId, transactionData: [transactionId] })
       toast.success("Transaction deleted successfully");
+       refetch()
     } catch (error) {
       toast.error("Failed to delete transaction");
       console.error("Delete error:", error);
@@ -454,7 +456,7 @@ export function TransactionTable({ transactions, accountId ,refetch}) {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-48">
                         <DropdownMenuItem
-                          onClick={() => router.push(`/transaction/create?edit=${transaction.id}`)}
+                          onClick={() => router.push(`/transaction/edit?id=${transaction.id}&accountName=${accountName}`)}
                           className="cursor-pointer"
                         >
                           <Edit className="h-4 w-4 mr-2" />
