@@ -18,11 +18,11 @@ import {
   Smartphone,
   Globe
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function Homepage() {
-  const navigate = (path) => {
-    console.log(`Navigating to: ${path}`);
-  };
+  const router=useRouter()
+  
 
   return (
     <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
@@ -85,7 +85,8 @@ export default function Homepage() {
               className="flex flex-wrap gap-4"
             >
               <button 
-                onClick={() => navigate("/dashboard")} 
+                onClick={() =>{console.log("hi") 
+                  router.push("/dashboard")}} 
                 className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-8 py-4 rounded-xl text-white font-semibold transition-all flex items-center gap-3 shadow-xl shadow-blue-500/25 hover:shadow-2xl hover:shadow-blue-500/40 transform hover:scale-105"
               >
                 Start Free Trial <ArrowRight className="w-5 h-5" />
