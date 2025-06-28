@@ -240,14 +240,15 @@ const StepCard = ({ step, index }) => {
           </div>
           
           <div className="relative mb-8">
-            <div className="absolute -top-4 -left-2 text-blue-100 text-5xl font-serif">"</div>
-            <p className="text-gray-700 text-lg leading-relaxed pt-2 pl-4 relative z-10">
-              {testimonial.quote}
-            </p>
-            <div className="absolute -bottom-4 -right-2 text-blue-100 text-5xl font-serif">"</div>
-          </div>
-          <div className="flex items-center">
-            <div className="relative mr-4">
+  <div className="absolute -top-4 -left-2 text-blue-100 text-5xl font-serif">&quot;</div>
+  <p className="text-gray-700 text-lg leading-relaxed pt-2 pl-4 relative z-10">
+    {testimonial.quote}
+  </p>
+  <div className="absolute -bottom-4 -right-2 text-blue-100 text-5xl font-serif">&quot;</div>
+</div>
+<div className="flex items-center">
+  <div className="relative mr-4">
+
               {testimonial.avatar ? (
                 <img 
                   src={testimonial.avatar} 
