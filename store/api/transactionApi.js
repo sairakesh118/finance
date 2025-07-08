@@ -4,7 +4,7 @@ import { get } from "react-hook-form";
 export const transactionApi = createApi({
   reducerPath: "transactionApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://financebackend-xspt.onrender.com",
+    baseUrl: "https://financebackend-1.onrender.com",
   }),
   endpoints: (builder) => ({
     getTransactions: builder.query({
