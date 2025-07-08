@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const accountApi = createApi({
   reducerPath: "accountApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://financebackend-xspt.onrender.com",
+    baseUrl: "https://financebackend-1.onrender.com",
     prepareHeaders: (headers, { getState }) => {
       const token = getState().auth?.token;
       if (token) {
